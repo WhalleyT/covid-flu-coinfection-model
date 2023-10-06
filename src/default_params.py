@@ -4,10 +4,10 @@ covid_params = {
     "beta1": 2e-8,
     "mu_Ec": 1,
     "kappa1": 4e-4,
-    "N1": 100,
+    "n1": 100,
     "theta_x": 10,
     "mu_c": 1.8,
-    "Pi_tc": 1e5,
+    "pi_tc": 1e5,
     "r_tc": 0.1,
     "psi_tc": 10,
     "mu_tc": 0.340,
@@ -19,9 +19,9 @@ influenza_params = {
 "beta2": 5.4e-9,
 "mu_Ei": 0.5,
 "kappa2": 1e-5,
-"N2": 33,
+"n2": 33,
 "mu_i": 1,
-"Pi_ti":  2.3e5,
+"pi_ti":  2.3e5,
 "r_ti": 0.1,
 "psi_ti": 30,
 "mu_ti": 0.33
@@ -63,3 +63,20 @@ params["tau_c"] = tau_c
 params["tau_i"] = tau_i
 params["t_final"] = 10
 params["eps"] = 0.8
+
+def init_params(params):
+
+    coinfection_inital_conditions = [params["E0"], params["Ec0"], params["C0"], params["Ei0"],
+        params["I0"], params["Tc0"], params["Ti0"], params["H0"]]
+
+    if params["tau_i"] > 0:
+        tau = params["tau_i"]
+    elif params["tau_c"] > 0:
+        tau = params["tau_c"]
+    else:
+        print("Warning, either tau_i or tau_c must be  greater than zero")
+    
+    Tint_1 = [0,  tau-0.001]
+    Tint_2 = [tau, params["t_final"]]
+    
+    return coinfection_inital_conditions, tau, Tint_1, Tint_2

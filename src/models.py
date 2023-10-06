@@ -30,38 +30,16 @@ def model_covid_influenza(t, y, N1, N2, Pi_tc, Pi_ti, beta1, beta2,
 
     return dy
 
-def run_covid_coinfection_model(model, Tint_1, Tint_2, y0, params):
-    N1 = params["N1"]
-    N2 = params["N2"]
-    Pi_tc = params["Pi_tc"]
-    Pi_ti = params["Pi_ti"]
-    beta1 = params["beta1"]
-    beta2 = params["beta2"]
-    kappa1 = params["kappa1"]
-    kappa2 = params["kappa2"]
-    mu_E = params["mu_E"]
-    mu_Ec = params["mu_Ec"]
-    mu_Ei = params["mu_Ei"]
-    mu_c = params["mu_c"]
-    mu_i = params["mu_i"]
-    mu_tc = params["mu_tc"]
-    mu_ti = params["mu_ti"]
-    pi_E = params["pi_E"]
-    psi_tc = params["psi_tc"]
-    psi_ti = params["psi_ti"]
-    psi_x = params["psi_x"]
-    r_tc = params["r_tc"]
-    r_ti = params["r_ti"]
-    r_x = params["r_x"]
-    tau_c = params["tau_c"]
-    tau_i = params["tau_i"]
-    theta_x = params["theta_x"]
+def run_covid_coinfection_model(model, Tint_1, Tint_2, coinfection_inital_conditions, params):
+    arg_tuple = (params["n1"], params["n2"], params["pi_tc"], params["pi_ti"],
+                 params["beta1"], params["beta2"], params["kappa1"], params["kappa2"],
+                 params["mu_E"], params["mu_Ec"], params["mu_Ei"], params["mu_c"], 
+                 params["mu_i"], params["mu_tc"], params["mu_ti"], params["pi_E"], 
+                 params["psi_tc"], params["psi_ti"], params["psi_x"], params["r_tc"],
+                  params["r_ti"], params["r_x"], params["tau_c"], params["tau_i"], 
+                  params["theta_x"])
 
-    arg_tuple = (N1, N2, Pi_tc, Pi_ti, beta1, beta2, kappa1, kappa2,
-                 mu_E, mu_Ec, mu_Ei, mu_c, mu_i, mu_tc, mu_ti, pi_E, 
-                 psi_tc, psi_ti, psi_x, r_tc, r_ti, r_x, tau_c, tau_i, theta_x)
-
-    sol_first_run_coninfection = solve_ivp(model, Tint_1, y0, args=arg_tuple, atol = [1e-20] * 8)
+    sol_first_run_coninfection = solve_ivp(model, Tint_1, coinfection_inital_conditions, args=arg_tuple, atol = [1e-20] * 8)
 
     params_from_first_coinfection = sol_first_run_coninfection.y.T
     y_from_model = params_from_first_coinfection[-1]
