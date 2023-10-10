@@ -58,5 +58,35 @@ def run_covid_coinfection_model(model, Tint_1, Tint_2, coinfection_inital_condit
     return sol_coninfection
 
 
+def model_covid(t, y, pi_e, mu_e, beta1, mu_ec, kappa1, n1, 
+                theta_x, mu_c, pi_tc, r_tc, psi_tc, mu_tc, r_x, 
+                psi_x, beta2, mu_ei, kappa2, n2, mu_i, pi_ti, 
+                r_ti, psi_ti, mu_ti, tau_i, tau_c):
+
+    dy = list()
+
+    dy.append(pi_e - beta1 * y[0] * y[2] - mu_e * y[0])
+    dy.append(beta1 * y[0] * y[2] - mu_ec * y[1] - kappa1 * y[1] * y[3])
+    dy.append(n1 * mu_ec * y[1] * (1 - y[4] / (theta_x + y[4])) - mu_c * y[2])
+    dy.append(pi_tc + r_tc * y[1] / (psi_tc + y[1]) - mu_tc * y[3])
+    dy.append(r_x * y[1] / (psi_x + y[1] - y[4]))
+
+    return dy
 
 
+def model_flu(t, y, Pi_E, mu_E, beta1, mu_Ec, kappa1, N1, theta_x, 
+              mu_c, Pi_tc, r_tc, psi_tc, mu_tc, r_x, psi_x, beta2,
+              mu_Ei, kappa2, N2, mu_i, Pi_ti, r_ti, psi_ti, mu_ti,
+              TAUi, TAUc):
+
+    dy = list()
+
+    dy.append(Pi_E - beta2*y[0]*y[2] - mu_E*y[0])
+    dy.append(beta2*y[0]*y[2] - mu_Ei*y[1] - kappa2*y[1] * y[3])
+    dy.append(N2*mu_Ei*y[1]*(theta_x/(theta_x + y[4])) - mu_i*y[2])
+    dy.append(Pi_ti + r_ti* y[1]/(psi_ti +y[1]) - mu_ti*y[3])
+    dy.append(r_x * (y[1] / ((psi_x + y[1])-y[[4]])))
+
+    print(dy)
+
+    return dy

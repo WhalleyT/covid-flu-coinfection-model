@@ -64,7 +64,7 @@ params["tau_i"] = tau_i
 params["t_final"] = 10
 params["eps"] = 0.8
 
-def init_params(params):
+def init_params_comb(params):
 
     coinfection_inital_conditions = [params["E0"], params["Ec0"], params["C0"], params["Ei0"],
         params["I0"], params["Tc0"], params["Ti0"], params["H0"]]
@@ -80,3 +80,16 @@ def init_params(params):
     Tint_2 = [tau, params["t_final"]]
     
     return coinfection_inital_conditions, tau, Tint_1, Tint_2
+
+
+def init_params_flu(params):
+    flu_initial_conditions = [params["E0"], 0, 1, 0, 0]
+    tint_flu = [0, 10]
+    flu_params_tuple = (params["pi_E"], params["mu_E"], params["beta1"], params["mu_Ec"], 
+                        params["kappa1"], params["n1"], params["theta_x"], params["mu_c"], 
+                        params["pi_tc"], params["r_tc"], params["psi_tc"],params["mu_tc"], 
+                        params["r_x"], params["psi_x"], params["beta2"], params["mu_Ei"], 
+                        params["kappa2"], params["n2"], params["mu_i"], params["pi_ti"], 
+                        params["r_ti"],  params["psi_ti"], params["mu_ti"], params["tau_i"], 
+                        params["tau_c"])
+    return flu_initial_conditions, tint_flu, flu_params_tuple

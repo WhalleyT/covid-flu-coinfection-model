@@ -2,6 +2,8 @@ import src.default_params
 import src.sliders
 import src.models
 
+from scipy.integrate import solve_ivp
+
 from bokeh.models import Slider, RangeSlider, ColumnDataSource
 from bokeh.io import curdoc, output_file
 from bokeh.layouts import column, row
@@ -27,7 +29,7 @@ def main():
     flu_params = src.default_params.influenza_params
 
     #retrieve our initial conditions, tau parameter and time intervals for coinfection model
-    coinfection_inital_conditions, tau, time_interval_1, time_interval_2 = src.default_params.init_params(params)
+    coinfection_inital_conditions, tau, time_interval_1, time_interval_2 = src.default_params.init_params_comb(params)
 
 
     #run our coinfection model first, so we have something to
@@ -36,11 +38,27 @@ def main():
                                                             coinfection_inital_conditions, params)
 
 
+    #put it into a dataframe
     coinfection_src = ColumnDataSource(data=dict(t = coinfection_sol.t, y1 = coinfection_sol.y[0,], y2 = coinfection_sol.y[1,], 
                                         y3 = coinfection_sol.y[2,], y4 = coinfection_sol.y[3,], y5 = coinfection_sol.y[4,], 
                                         y6 = coinfection_sol.y[5,], y7 = coinfection_sol.y[6,], y8 = coinfection_sol.y[7,]))
 
-    #create our plot
+    
+    #now do the same for the flu model
+    flu_initial_conditions, tint_flu, flu_params_tuple = src.default_params.init_params_flu(params)
+
+    flu_sol = solve_ivp(src.models.model_flu, tint_flu, flu_initial_conditions,
+                                atol = [1e-20] * 5, args=flu_params_tuple)
+
+    flu_src = ColumnDataSource(data=dict(t = flu_sol.t, y1 = flu_sol.y[0,], 
+                               y2 = flu_sol.y[1,], y3 = flu_sol.y[2,], 
+                               y4 = flu_sol.y[3,], y5 = flu_sol.y[4,]))
+
+    
+    
+    
+    
+    #create our plots
     e_cell_per_ml_vs_time = figure(height=800, width=800, title="E (cells/mL) vs Time (Days)",
                                 tools="crosshair,pan,reset,save,wheel_zoom")
     ec_cell_per_ml_vs_time = figure(height=800, width=800, title="E_c (cells/mL) vs Time (Days)",
@@ -64,6 +82,16 @@ def main():
         coinfection_src.data = dict(t = coinfection_sol.t, y1 = coinfection_sol.y[0,], y2 = coinfection_sol.y[1,], 
                         y3 = coinfection_sol.y[2,], y4 = coinfection_sol.y[3,], y5 = coinfection_sol.y[4,], 
                         y6 = coinfection_sol.y[5,], y7 = coinfection_sol.y[6,], y8 = coinfection_sol.y[7,])
+        
+        #now reinit flu model with parameters as they take a different tuple
+        flu_initial_conditions, tint_flu, flu_params_tuple = src.default_params.init_flu_params(params)
+        
+        flu_sol = solve_ivp(src.models.model_flu, tint_flu, flu_initial_conditions,
+                            atol = [1e-20] * 5, args=flu_params_tuple)
+                                
+        flu_src.data = ColumnDataSource(data=dict(t = flu_sol.t, y1 = flu_sol.y[0,], 
+                                        y2 = flu_sol.y[1,], y3 = flu_sol.y[2,], 
+                                        y4 = flu_sol.y[3,], y5 = flu_sol.y[4,]))
 
     for w in list(src.sliders.covid_sliders.values()) + list(src.sliders.flu_sliders.values()):
         w.on_change('value', update_data)
