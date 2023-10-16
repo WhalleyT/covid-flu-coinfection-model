@@ -93,3 +93,14 @@ def init_params_flu(params):
                         params["r_ti"],  params["psi_ti"], params["mu_ti"], params["tau_i"], 
                         params["tau_c"])
     return flu_initial_conditions, tint_flu, flu_params_tuple
+
+
+def init_params_covid(params):
+    covid_initial_conditions = [params["E0"], 0, 1, 0, 0]
+    tint_covid = [0, 10]
+    covid_params_tuple = (params["pi_E"], params["mu_E"], params["beta1"], params["mu_Ec"], params["kappa1"], params["n1"], 
+                          params["theta_x"], params["mu_c"], params["pi_tc"], params["r_tc"], 
+                          params["psi_tc"], params["mu_tc"], params["r_x"], params["psi_x"], params["beta2"], 
+                          params["mu_Ei"], params["kappa2"], params["n2"], params["mu_i"], params["pi_ti"], 
+                          params["r_ti"], params["psi_ti"], params["mu_ti"], params["tau_i"], params["tau_c"])
+    return covid_initial_conditions, tint_covid, covid_params_tuple

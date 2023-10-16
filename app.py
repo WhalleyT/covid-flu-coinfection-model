@@ -54,19 +54,46 @@ def main():
                                y2 = flu_sol.y[1,], y3 = flu_sol.y[2,], 
                                y4 = flu_sol.y[3,], y5 = flu_sol.y[4,]))
 
+    covid_initial_conditions, tint_covid, covid_params_tuple = src.default_params.init_params_covid(params)
+
+    cov_sol = solve_ivp(src.models.model_covid, tint_covid, covid_initial_conditions,
+                                atol = [1e-20] * 5, args=covid_params_tuple)
+
+    cov_src = ColumnDataSource(data=dict(t = cov_sol.t, y1 = cov_sol.y[0,], 
+                               y2 = cov_sol.y[1,], y3 = cov_sol.y[2,], 
+                               y4 = cov_sol.y[3,], y5 = cov_sol.y[4,]))
+
     
     
     
     
     #create our plots
-    e_cell_per_ml_vs_time = figure(height=800, width=800, title="E (cells/mL) vs Time (Days)",
+    e_cell_per_ml_vs_time = figure(height=400, width=400, title="E (cells/mL) vs Time (Days)",
                                 tools="crosshair,pan,reset,save,wheel_zoom")
-    ec_cell_per_ml_vs_time = figure(height=800, width=800, title="E_c (cells/mL) vs Time (Days)",
+    ec_cell_per_ml_vs_time = figure(height=400, width=400, title="E_c (cells/mL) vs Time (Days)",
                                 tools="crosshair,pan,reset,save,wheel_zoom")
-
+    c_virions_per_ml_vs_time = figure(height=400, width=400, title="C (virions/mL) vs  Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
+    ei_cell_per_ml_vs_time = figure(height=400, width=400, title="E_i (cells/mL) vs Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
+    i_virions_per_ml_vs_time = figure(height=400, width=400, title="I (virions/mL) vs Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
+    tc_cell_per_ml_vs_time = figure(height=400, width=400, title="T_c (cells/mL) vs Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
+    ti_cell_per_ml_vs_time = figure(height=400, width=400, title="T_i (cells/mL) vs Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
+    x_vs_time = figure(height=400, width=400, title="X vs Time (Days)",
+                                tools="crosshair,pan,reset,save,wheel_zoom")
     #set up plots
+    #todo .line can be layered on top; change colour/dash and it will work
     e_cell_per_ml_vs_time.line('t', 'y1', source=coinfection_src, line_width=3, line_alpha=0.6)
     ec_cell_per_ml_vs_time.line('t', 'y2', source=coinfection_src, line_width=3, line_alpha=0.6)
+    c_virions_per_ml_vs_time.line("t", "y2", source=coinfection_src, line_width=3, line_alpha=0.6)
+    ei_cell_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6)
+    i_virions_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6)
+    tc_cell_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6)
+    ti_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6)
+    x_vs_time.line("t", "y7", source=coinfection_src, line_width=3, line_alpha=0.6)
 
     #function to update over time
     def update_data(attrname, old, new):
@@ -92,6 +119,16 @@ def main():
         flu_src.data = ColumnDataSource(data=dict(t = flu_sol.t, y1 = flu_sol.y[0,], 
                                         y2 = flu_sol.y[1,], y3 = flu_sol.y[2,], 
                                         y4 = flu_sol.y[3,], y5 = flu_sol.y[4,]))
+        
+        #and for covid
+        covid_initial_conditions, tint_covid, covid_params_tuple = src.default_params.init_params_covid(params)
+
+        cov_sol = solve_ivp(src.models.model_covid, tint_covid, covid_initial_conditions,
+                                atol = [1e-20] * 5, args=covid_params_tuple)
+
+        cov_src = ColumnDataSource(data=dict(t = cov_sol.t, y1 = cov_sol.y[0,], 
+                                   y2 = cov_sol.y[1,], y3 = cov_sol.y[2,], 
+                                   y4 = cov_sol.y[3,], y5 = cov_sol.y[4,]))
 
     for w in list(src.sliders.covid_sliders.values()) + list(src.sliders.flu_sliders.values()):
         w.on_change('value', update_data)
@@ -99,12 +136,14 @@ def main():
 
     inputs = column(list(src.sliders.covid_sliders.values()))
 
-    plot_column_left = column(e_cell_per_ml_vs_time, ec_cell_per_ml_vs_time)
-
+    plot_column_left = column(e_cell_per_ml_vs_time, ec_cell_per_ml_vs_time, c_virions_per_ml_vs_time,
+                              ei_cell_per_ml_vs_time)
+    plot_column_right = column(i_virions_per_ml_vs_time, tc_cell_per_ml_vs_time, ti_cell_per_ml_vs_time,
+                              x_vs_time)
 
 
     #make the document
-    curdoc().add_root(row(inputs, plot_column_left))
+    curdoc().add_root(row(inputs, plot_column_left, plot_column_right))
     curdoc().title = "Coinfection Model of COVID-19 and Influenza"
     output_file('plot.html')
 

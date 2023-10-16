@@ -85,7 +85,7 @@ def model_flu(t, y, Pi_E, mu_E, beta1, mu_Ec, kappa1, N1, theta_x,
     dy.append(beta2*y[0]*y[2] - mu_Ei*y[1] - kappa2*y[1] * y[3])
     dy.append(N2*mu_Ei*y[1]*(theta_x/(theta_x + y[4])) - mu_i*y[2])
     dy.append(Pi_ti + r_ti* y[1]/(psi_ti +y[1]) - mu_ti*y[3])
-    dy.append(r_x * (y[1] / ((psi_x + y[1])-y[[4]])))
+    dy.append(r_x * (y[1] / ((psi_x + y[1])-y[4])))
 
     print(dy)
 
