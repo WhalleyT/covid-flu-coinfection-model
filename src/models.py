@@ -1,3 +1,6 @@
+
+import sys
+
 from scipy.integrate import solve_ivp
 
 def model_covid_influenza(t, y, N1, N2, Pi_tc, Pi_ti, beta1, beta2, 
@@ -6,7 +9,7 @@ def model_covid_influenza(t, y, N1, N2, Pi_tc, Pi_ti, beta1, beta2,
                           r_ti, r_x, tau_c, tau_i, theta_x):
     dy = list()
 
-    dy.append(pi_E - beta1 * y[0] * y[2] - beta2 * y[0] * y[4]- mu_E*y[0])
+    dy.append((pi_E) - (beta1 * y[0] * y[2]) - (beta2 * y[0] * y[4]) -  (mu_E*y[0]))
 
     dy.append(beta1 * y[1] * y[2] - mu_Ec * y[1] - kappa1 * y[1]*y[5] )
     
@@ -27,6 +30,10 @@ def model_covid_influenza(t, y, N1, N2, Pi_tc, Pi_ti, beta1, beta2,
         dy.append(0)
 
     dy.append(r_x * ((y[1] + y[3] / (psi_x + y[1]+ y[3])- y[7])))
+
+    if len(dy) != 8:
+        print("Something has gone wrong in model_covid_influenza. Incorrect number of vars returned")
+        sys.exit()
 
     return dy
 
@@ -55,7 +62,8 @@ def run_covid_coinfection_model(model, Tint_1, Tint_2, coinfection_inital_condit
     sol_coninfection = solve_ivp(model_covid_influenza, Tint_2, y_from_model,
                                 atol = [1e-20] * 8, args=arg_tuple)
 
-    return sol_coninfection
+
+    return sol_first_run_coninfection, sol_coninfection
 
 
 def model_covid(t, y, pi_e, mu_e, beta1, mu_ec, kappa1, n1, 
@@ -86,7 +94,5 @@ def model_flu(t, y, Pi_E, mu_E, beta1, mu_Ec, kappa1, N1, theta_x,
     dy.append(N2*mu_Ei*y[1]*(theta_x/(theta_x + y[4])) - mu_i*y[2])
     dy.append(Pi_ti + r_ti* y[1]/(psi_ti +y[1]) - mu_ti*y[3])
     dy.append(r_x * (y[1] / ((psi_x + y[1])-y[4])))
-
-    print(dy)
 
     return dy

@@ -2,6 +2,8 @@ import src.default_params
 import src.sliders
 import src.models
 
+import numpy as np
+
 from scipy.integrate import solve_ivp
 
 from bokeh.models import Slider, RangeSlider, ColumnDataSource
@@ -33,15 +35,17 @@ def main():
 
 
     #run our coinfection model first, so we have something to
-    coinfection_sol = src.models.run_covid_coinfection_model(src.models.model_covid_influenza,
+    coinfection_sol_1, coinfection_sol_2 = src.models.run_covid_coinfection_model(src.models.model_covid_influenza,
                                                             time_interval_1, time_interval_2, 
                                                             coinfection_inital_conditions, params)
-
+    
+    coin_y = np.hstack([coinfection_sol_1.y, coinfection_sol_2.y])
+    coin_t = np.append(coinfection_sol_1.t, coinfection_sol_2.t)
 
     #put it into a dataframe
-    coinfection_src = ColumnDataSource(data=dict(t = coinfection_sol.t, y1 = coinfection_sol.y[0,], y2 = coinfection_sol.y[1,], 
-                                        y3 = coinfection_sol.y[2,], y4 = coinfection_sol.y[3,], y5 = coinfection_sol.y[4,], 
-                                        y6 = coinfection_sol.y[5,], y7 = coinfection_sol.y[6,], y8 = coinfection_sol.y[7,]))
+    coinfection_src = ColumnDataSource(data=dict(t = coin_t, y1 = coin_y[0,], y2 = coin_y[1,], 
+                                        y3 = coin_y[2,], y4 = coin_y[3,], y5 = coin_y[4,], 
+                                        y6 = coin_y[5,], y7 = coin_y[6,], y8 = coin_y[7,]))
 
     
     #now do the same for the flu model
@@ -130,15 +134,18 @@ def main():
             elif parameter in src.sliders.covid_sliders:
                 params[parameter] = src.sliders.flu_sliders[parameter].value
 
-        coinfection_sol = src.models.run_covid_coinfection_model(src.models.model_covid_influenza,
+        coinfection_sol_1, coinfection_sol_2 = src.models.run_covid_coinfection_model(src.models.model_covid_influenza,
                                                         time_interval_1, time_interval_2, coinfection_inital_conditions, params)
 
-        coinfection_src.data = dict(t = coinfection_sol.t, y1 = coinfection_sol.y[0,], y2 = coinfection_sol.y[1,], 
-                        y3 = coinfection_sol.y[2,], y4 = coinfection_sol.y[3,], y5 = coinfection_sol.y[4,], 
-                        y6 = coinfection_sol.y[5,], y7 = coinfection_sol.y[6,], y8 = coinfection_sol.y[7,])
+        coin_y = np.hstack([coinfection_sol_1.y, coinfection_sol_2.y])
+        coin_t = np.append(coinfection_sol_1.t, coinfection_sol_2.t)
+
+        coinfection_src.data = dict(t = coin_t, y1 = coin_y[0,], y2 = coin_y[1,], 
+                        y3 = coin_y[2,], y4 = coin_y[3,], y5 = coin_y[4,], 
+                        y6 = coin_y[5,], y7 = coin_y[6,], y8 = coin_y[7,])
         
         #now reinit flu model with parameters as they take a different tuple
-        flu_initial_conditions, tint_flu, flu_params_tuple = src.default_params.init_flu_params(params)
+        flu_initial_conditions, tint_flu, flu_params_tuple = src.default_params.init_params_flu(params)
         
         flu_sol = solve_ivp(src.models.model_flu, tint_flu, flu_initial_conditions,
                             atol = [1e-20] * 5, args=flu_params_tuple)
