@@ -88,30 +88,39 @@ def main():
     #todo .line can be layered on top; change colour/dash and it will work
 
     #plot 1
-    e_cell_per_ml_vs_time.line('t', 'y1', source=coinfection_src, line_width=3, line_alpha=0.6)
+    e_cell_per_ml_vs_time.line('t', 'y1', source=coinfection_src, line_width=3, line_alpha=0.6,
+                               line_color="black")
 
     #plot 2
-    ec_cell_per_ml_vs_time.line('t', 'y2', source=coinfection_src, line_width=3, line_alpha=0.6)
+    ec_cell_per_ml_vs_time.line('t', 'y2', source=coinfection_src, line_width=3, line_alpha=0.6,
+                               line_color="red")
 
     #plot 3
-    c_virions_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6)
-    c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6)
+    c_virions_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6,
+                                   line_color="red")
+    c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+                                   line_color="red", line_dash="dashed")
 
     #plot 4
-    ei_cell_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6)
+    ei_cell_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6,
+                                line_color="blue")
 
     #plot 5
-    i_virions_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6)
-    i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6)
+    i_virions_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6,
+                                  line_color="blue")
+    i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+                                  line_color="blue", line_dash="dashed")
     
     #plot 6
-    tc_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6)
+    tc_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6,
+                                line_color="red")
     
     #plot 7
-    ti_cell_per_ml_vs_time.line("t", "y7", source=coinfection_src, line_width=3, line_alpha=0.6)
+    ti_cell_per_ml_vs_time.line("t", "y7", source=coinfection_src, line_width=3, line_alpha=0.6,
+                                line_color="blue")
     
     #plot 8
-    x_vs_time.line("t", "y8", source=coinfection_src, line_width=3, line_alpha=0.6)
+    x_vs_time.line("t", "y8", source=coinfection_src, line_width=3, line_alpha=0.6, line_color="black")
 
     #function to update over time
     def update_data(attrname, old, new):

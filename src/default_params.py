@@ -34,7 +34,7 @@ eps = 0.8
 
 if tau_c > 0:
     time_params = {
-        "E0": eps * covid_params["pi_E"] / covid_params["mu_E"],
+        "E0": eps * (covid_params["pi_E"] / covid_params["mu_E"]),
         "Ec0": 0,
         "C0": 0, 
         "Tc0": 0,
