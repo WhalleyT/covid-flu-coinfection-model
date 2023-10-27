@@ -86,14 +86,32 @@ def main():
                                 tools="crosshair,pan,reset,save,wheel_zoom")
     #set up plots
     #todo .line can be layered on top; change colour/dash and it will work
+
+    #plot 1
     e_cell_per_ml_vs_time.line('t', 'y1', source=coinfection_src, line_width=3, line_alpha=0.6)
+
+    #plot 2
     ec_cell_per_ml_vs_time.line('t', 'y2', source=coinfection_src, line_width=3, line_alpha=0.6)
-    c_virions_per_ml_vs_time.line("t", "y2", source=coinfection_src, line_width=3, line_alpha=0.6)
-    ei_cell_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6)
-    i_virions_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6)
-    tc_cell_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6)
-    ti_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6)
-    x_vs_time.line("t", "y7", source=coinfection_src, line_width=3, line_alpha=0.6)
+
+    #plot 3
+    c_virions_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6)
+    c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6)
+
+    #plot 4
+    ei_cell_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6)
+
+    #plot 5
+    i_virions_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6)
+    i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6)
+    
+    #plot 6
+    tc_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6)
+    
+    #plot 7
+    ti_cell_per_ml_vs_time.line("t", "y7", source=coinfection_src, line_width=3, line_alpha=0.6)
+    
+    #plot 8
+    x_vs_time.line("t", "y8", source=coinfection_src, line_width=3, line_alpha=0.6)
 
     #function to update over time
     def update_data(attrname, old, new):
