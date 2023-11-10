@@ -33,7 +33,6 @@ def main():
     #retrieve our initial conditions, tau parameter and time intervals for coinfection model
     coinfection_inital_conditions, tau, time_interval_1, time_interval_2 = src.default_params.init_params_comb(params)
 
-
     #run our coinfection model first, so we have something to
     coinfection_sol_1, coinfection_sol_2 = src.models.run_covid_coinfection_model(src.models.model_covid_influenza,
                                                             time_interval_1, time_interval_2, 
@@ -41,6 +40,9 @@ def main():
     
     coin_y = np.hstack([coinfection_sol_1.y, coinfection_sol_2.y])
     coin_t = np.append(coinfection_sol_1.t, coinfection_sol_2.t)
+
+    print(coin_y[2,])
+    print(coin_t)
 
     #put it into a dataframe
     coinfection_src = ColumnDataSource(data=dict(t = coin_t, y1 = coin_y[0,], y2 = coin_y[1,], 
@@ -102,8 +104,8 @@ def main():
     #plot 3
     c_virions_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6,
                                    line_color="red")
-    c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
-                                   line_color="red", line_dash="dashed")
+    #c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+    #                               line_color="red", line_dash="dashed")
 
     #plot 4
     ei_cell_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6,
@@ -112,8 +114,8 @@ def main():
     #plot 5
     i_virions_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6,
                                   line_color="blue")
-    i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
-                                  line_color="blue", line_dash="dashed")
+    #i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+    #                              line_color="blue", line_dash="dashed")
     
     #plot 6
     tc_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6,

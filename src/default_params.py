@@ -65,6 +65,9 @@ params["t_final"] = 10
 params["eps"] = 0.8
 
 def init_params_comb(params):
+    """
+    split these up completely to have two seperate runs of the model
+    """
 
     coinfection_inital_conditions = [params["E0"], params["Ec0"], params["C0"], params["Ei0"],
         params["I0"], params["Tc0"], params["Ti0"], params["H0"]]
