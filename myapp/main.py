@@ -178,6 +178,6 @@ def main():
     #make the document
     curdoc().add_root(row(inputs, plot_column_left, plot_column_right))
     curdoc().title = "Coinfection Model of COVID-19 and Influenza"
-    #output_file('plot.html')
+    output_file('plot.html')
 
 main()
