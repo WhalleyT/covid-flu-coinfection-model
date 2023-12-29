@@ -1,1 +1,1 @@
-web: gunicorn covid-influenza-coinfection.wsgi
+web: bokeh serve --port=$PORT --allow-websocket-origin=covid-influenza-coinfection.herokuapp.com --address=0.0.0.0 --use-xheaders main.py
