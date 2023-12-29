@@ -8,7 +8,7 @@ setup(
     version="1.0",
     packages=find_packages(),
     install_requires=[
-        "bokeh==3.1.1",
+        "bokeh==3.2.2",
         "numpy",
         "scipy"
         ]
