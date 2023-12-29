@@ -41,9 +41,6 @@ def main():
     coin_y = np.hstack([coinfection_sol_1.y, coinfection_sol_2.y])
     coin_t = np.append(coinfection_sol_1.t, coinfection_sol_2.t)
 
-    print(coin_y[2,])
-    print(coin_t)
-
     #put it into a dataframe
     coinfection_src = ColumnDataSource(data=dict(t = coin_t, y1 = coin_y[0,], y2 = coin_y[1,], 
                                         y3 = coin_y[2,], y4 = coin_y[3,], y5 = coin_y[4,], 
@@ -104,8 +101,8 @@ def main():
     #plot 3
     c_virions_per_ml_vs_time.line("t", "y3", source=coinfection_src, line_width=3, line_alpha=0.6,
                                    line_color="red")
-    #c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
-    #                               line_color="red", line_dash="dashed")
+    c_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+                                   line_color="red", line_dash="dashed")
 
     #plot 4
     ei_cell_per_ml_vs_time.line("t", "y4", source=coinfection_src, line_width=3, line_alpha=0.6,
@@ -114,8 +111,8 @@ def main():
     #plot 5
     i_virions_per_ml_vs_time.line("t", "y5", source=coinfection_src, line_width=3, line_alpha=0.6,
                                   line_color="blue")
-    #i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
-    #                              line_color="blue", line_dash="dashed")
+    i_virions_per_ml_vs_time.line("t", "y3", source=cov_src, line_width=3, line_alpha=0.6,
+                                  line_color="blue", line_dash="dashed")
     
     #plot 6
     tc_cell_per_ml_vs_time.line("t", "y6", source=coinfection_src, line_width=3, line_alpha=0.6,
@@ -181,6 +178,6 @@ def main():
     #make the document
     curdoc().add_root(row(inputs, plot_column_left, plot_column_right))
     curdoc().title = "Coinfection Model of COVID-19 and Influenza"
-    output_file('plot.html')
+    #output_file('plot.html')
 
 main()
