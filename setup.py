@@ -8,8 +8,6 @@ setup(
     version="1.0",
     packages=find_packages(),
     install_requires=[
-        "bokeh==3.2.2",
-        "numpy",
-        "scipy"
+        line.strip() for line in open('requirements.txt')
         ]
 )
