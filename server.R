@@ -5,6 +5,22 @@ source("R/models.R")
 function(input, output, session) {
   solution <- reactive({
     
+    covid_solution <- covid_model(Pi_E = input$Pi_E, mu_E = input$Mu_E, beta1 = input$Beta_1, mu_1 = input$mu_Ec,
+                                   kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
+                                   Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
+                                   psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
+                                   N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
+                                   mu_ti =  input$Mu_Ti)
+    
+    influenza_solution <- influenza_model(Pi_E = input$Pi_E, mu_E = input$Mu_E, beta1 = input$Beta_1, mu_1 = input$mu_Ec,
+                                   kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
+                                   Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
+                                   psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
+                                   N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
+                                   mu_ti =  input$Mu_Ti)
+                                  
+                                  
+    
     if(input$coinfection_delay == "covid"){
       eps <- 0.7
       
@@ -75,8 +91,6 @@ function(input, output, session) {
       
     }
     if(input$coinfection_delay == "simul"){
-      print(input$Pi_E)
-      print(input$mu_E)
       E0 <- 0.7*input$Pi_E/input$Mu_E
       y0 <- as.matrix(c(E0, 1, 10, 1, 1, 1, 1, 1))
       
@@ -86,6 +100,7 @@ function(input, output, session) {
                                     psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
                                     N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
                                     mu_ti =  input$Mu_Ti, y0 = y0)
+      
       
     }
     
