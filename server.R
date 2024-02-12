@@ -7,20 +7,20 @@ function(input, output, session) {
   solution <- reactive({
     
     covid_solution <- covid_model(Pi_E = input$Pi_E, mu_E = input$Mu_E, beta1 = input$Beta_1, mu_1 = input$mu_Ec,
-                                   kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
-                                   Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
-                                   psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
-                                   N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
-                                   mu_ti =  input$Mu_Ti)
+                                  kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
+                                  Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
+                                  psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
+                                  N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
+                                  mu_ti =  input$Mu_Ti)
     
     influenza_solution <- influenza_model(Pi_E = input$Pi_E, mu_E = input$Mu_E, beta1 = input$Beta_1, mu_1 = input$mu_Ec,
-                                   kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
-                                   Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
-                                   psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
-                                   N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
-                                   mu_ti =  input$Mu_Ti)
-                                  
-                                  
+                                          kappa1 = input$Kappa_1,N1 = input$N1, theta_x = input$Theta_x, mu_c = input$Mu_c, 
+                                          Pi_tc = input$Pi_Tc, mu_tc = input$Mu_Tc, psi_tc = input$Psi_Tc, r_x=input$Rx, 
+                                          psi_x = input$Psi_X, beta2 =input$Beta_2,  mu_2 = input$Mu_Ei, kappa2 =input$Kappa2,
+                                          N2 = input$N2, mu_i = input$Mu_i, Pi_ti = input$Pi_Ti, psi_ti = input$Psi_Ti, 
+                                          mu_ti =  input$Mu_Ti)
+    
+    
     
     if(input$coinfection_delay == "covid"){
       eps <- 0.7
@@ -108,58 +108,56 @@ function(input, output, session) {
     
     output <- left_join(solution, covid_solution, by = "T")
     output <- left_join(output, influenza_solution, by = "T")
-    solution <- output
-    print(head(influenza_solution))
-    print(output)
+    solution <- list("coinfection" = solution, "influenza" = influenza_solution, "covid" = covid_solution)
     return(solution)
   })
   
   output$plot_1_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V2.x))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V2))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E")
   })
   
   output$plot_1_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V3.x))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V3))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E_c")
   })
   
   output$plot_2_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V4.x))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V4))+geom_path()+
       scale_y_log10()+theme_bw()+
-      geom_line(aes(x=T, y=V4.y), color = "red")+
+      geom_path(data = solution()$covid, aes(x=T, y=V4), color = "red")+
       xlab("days") + ylab("C")
   })
   
   output$plot_2_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V5.x))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V5))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E_i")
   })
   
   output$plot_3_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V6.x))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V6))+geom_path()+
       scale_y_log10()+theme_bw()+
-      geom_point(aes(x=T, y=V4), color = "red")+
+      geom_path(data = solution()$influenza, aes(x=T, y=V4), color = "red")+
       xlab("days") + ylab("I")
   })
   
   output$plot_3_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V7))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V7))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("T_c")
   })
   
   output$plot_4_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V8))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V8))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("T_i")
   })
   
   output$plot_4_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V9))+geom_path()+
+    ggplot(solution()$coinfection, aes(x=T,y=V9))+geom_path()+
       scale_y_log10()+theme_bw()+
       xlab("days") + ylab("X")
   })
