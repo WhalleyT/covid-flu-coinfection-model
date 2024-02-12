@@ -1,4 +1,5 @@
 library(ggplot2)
+library(dplyr)
 
 source("R/models.R")
 
@@ -104,54 +105,62 @@ function(input, output, session) {
       
     }
     
+    
+    output <- left_join(solution, covid_solution, by = "T")
+    output <- left_join(output, influenza_solution, by = "T")
+    solution <- output
+    print(head(influenza_solution))
+    print(output)
     return(solution)
   })
   
   output$plot_1_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V2))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+    ggplot(solution(), aes(x=T,y=V2.x))+geom_path()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E")
   })
   
   output$plot_1_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V3))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+    ggplot(solution(), aes(x=T,y=V3.x))+geom_path()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E_c")
   })
   
   output$plot_2_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V4))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+    ggplot(solution(), aes(x=T,y=V4.x))+geom_path()+
+      scale_y_log10()+theme_bw()+
+      geom_line(aes(x=T, y=V4.y), color = "red")+
       xlab("days") + ylab("C")
   })
   
   output$plot_2_2 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V5))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+    ggplot(solution(), aes(x=T,y=V5.x))+geom_path()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("E_i")
   })
   
   output$plot_3_1 <- renderPlot({
-    ggplot(solution(), aes(x=T,y=V6))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+    ggplot(solution(), aes(x=T,y=V6.x))+geom_path()+
+      scale_y_log10()+theme_bw()+
+      geom_point(aes(x=T, y=V4), color = "red")+
       xlab("days") + ylab("I")
   })
   
   output$plot_3_2 <- renderPlot({
     ggplot(solution(), aes(x=T,y=V7))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("T_c")
   })
   
   output$plot_4_1 <- renderPlot({
     ggplot(solution(), aes(x=T,y=V8))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("T_i")
   })
   
   output$plot_4_2 <- renderPlot({
     ggplot(solution(), aes(x=T,y=V9))+geom_path()+
-      scale_x_log10()+scale_y_log10()+theme_bw()+
+      scale_y_log10()+theme_bw()+
       xlab("days") + ylab("X")
   })
 }
